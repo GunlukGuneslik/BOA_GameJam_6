@@ -15,7 +15,6 @@ MonoBehaviour:
   obstacleId: 0
   widthInCells: 1
   heightInLanes: 1
-  obstacleClosedImage: {fileID: 0}
-  obstacleOpenImage: {fileID: 0}
+  conveyorSprite: {fileID: 7482667652216324306, guid: 710e49129f02f2949bb42a9d7d2ad911, type: 3}
+  obstacleSprite: {fileID: 7482667652216324306, guid: 710e49129f02f2949bb42a9d7d2ad911, type: 3}
   obstacleLevel: 0
-  damageAmount: 0
