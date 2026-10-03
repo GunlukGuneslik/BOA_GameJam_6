@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public int roundNum;
+    [SerializeField] private GamePlayController gamePlayController;
+
+    [SerializeField] private int roundNum;
     public static GameManager Instance;
 
     private void Awake()
@@ -19,7 +21,12 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        
+        if (gamePlayController == null) {
+            Debug.LogError("ASSIGN THE GAME_PLAY_CONTROLLER!!!!");
+            return;
+        }
+
+        gamePlayController.RoundFinished += HandleRoundFinished;
     }
 
     // Update is called once per frame
@@ -28,13 +35,31 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void HandleHunterWin()
-    {
-        
+    public int GetCurrentRoundNum() { 
+        return roundNum;
     }
 
-    public void HandleWizardWin()
+    public void HandleRoundFinished(float time)
     {
-        
+        if (roundNum % 2 == 1)
+        {
+            DataManager.Instance.IncreasePlayer1Score(time);
+        }
+        else {
+            DataManager.Instance.IncreasePlayer2Score(time);
+        }
+
+        roundNum++;
+
+        // TODO: Call the UI
+    }
+
+    /// <summary>
+    /// To start game play first time with fresh scores.
+    /// </summary>
+    public void StartGamePlay() {
+        roundNum = 1;
+        DataManager.Instance.ResetPlayerData();
+        gamePlayController.StartRound(roundNum);
     }
 }
