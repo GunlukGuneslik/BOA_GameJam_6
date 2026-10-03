@@ -27,6 +27,9 @@ public class GameManager : MonoBehaviour
         }
 
         gamePlayController.RoundFinished += HandleRoundFinished;
+
+        // TODO: DELETE THIS
+        StartGamePlay();
     }
 
     // Update is called once per frame

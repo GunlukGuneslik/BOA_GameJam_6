@@ -36,6 +36,18 @@ public class Obstacle : MonoBehaviour,
 
     public void Initialize(ObstacleData data)
     {
+        if (mainCamera == null) {
+            mainCamera = Camera.main;
+        }
+
+        if (obstacleCollider == null) {
+            obstacleCollider = GetComponent<Collider2D>();
+        }
+
+        if (placementGrid == null) {
+            placementGrid = FindFirstObjectByType<PlacementGrid>();
+        }
+
         this.data = data;
         spriteRenderer.sprite = data.conveyorSprite;
         transform.localScale = Vector3.one;
@@ -53,16 +65,20 @@ public class Obstacle : MonoBehaviour,
             Debug.Log("Obstacke cannot be without a parent!!");
             return;
         }
-        else if (previousParent.TryGetComponent(out ConveyorBeltController belt))
-        {
-            Debug.Log("Obstacle was on the belt.");
-            belt.RemoveObstacleFromBelt(this);
-        }
         else if (previousParent.TryGetComponent(out InventoryController inventory))
         {
             Debug.Log("Obstacle was on an inventory.");
             inventory.RemoveObstacleFromInventory();
-        }
+        } 
+        else if (previousParent.TryGetComponent(out ConveyorBeltController belt))
+        {
+            Debug.Log("Obstacle was on the belt.");
+            belt.RemoveObstacleFromBelt(this);
+        } 
+        else if (previousParent.parent != null && previousParent.parent.TryGetComponent(out ConveyorBeltController belt2)) {
+            Debug.Log("Obstacle was on the belt, under a contentFolder.");
+            belt2.RemoveObstacleFromBelt(this);
+        } 
         else
         {
             Debug.LogError("Wrong hierarchy!!!");

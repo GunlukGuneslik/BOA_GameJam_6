@@ -1,16 +1,23 @@
+using System;
 using UnityEngine;
 
 public class Border : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public static Action<Obstacle> OnObstacleHitBoundary;
+
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        
+        if (other.TryGetComponent(out Obstacle obs))
+        {
+            OnObstacleHitBoundary?.Invoke(obs);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        
+        if (collision.collider.TryGetComponent(out Obstacle obs))
+        {
+            OnObstacleHitBoundary?.Invoke(obs);
+        }
     }
 }

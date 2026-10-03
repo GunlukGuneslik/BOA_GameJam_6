@@ -1,15 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ConveyorBeltController : MonoBehaviour
 {
-    // Pools
-    private List<Obstacle> InActiveObstacles;
+    // Only holds the obstacles currently moving on the belt (max 6)
     private List<Obstacle> ActiveObstacles;
 
-    [Header("References & Prefab")]
-    [SerializeField] private Obstacle ObstacklePrefab;
+    [Header("References")]
     [SerializeField] private Transform contentParent;
     [SerializeField] private Obstacle placeholderObstacle;
 
@@ -33,45 +32,37 @@ public class ConveyorBeltController : MonoBehaviour
     private float currentDifficultyProgress = 0f;
     private Coroutine spawnCoroutine;
 
+    // Actions to talk to GamePlayController without holding a reference to it:
+    public static Func<Obstacle> OnObstacleRequested;          // Requests 1 obstacle from GamePlayController's pool
+    public static Action<List<Obstacle>> ConveyorBeltClean;    // Sends all remaining belt obstacles back to the pool
+
     private void Awake()
     {
         isBeltActive = false;
-        InActiveObstacles = new List<Obstacle>();
         ActiveObstacles = new List<Obstacle>();
 
         if (contentParent == null)
         {
             contentParent = transform;
         }
-
-        // Gather any existing obstacles already placed under contentParent in the scene
-        foreach (Transform child in contentParent)
-        {
-            if (child.TryGetComponent(out Obstacle obs) && obs != placeholderObstacle)
-            {
-                obs.gameObject.SetActive(false);
-                InActiveObstacles.Add(obs);
-            }
-        }
-
-        // Setup or Instantiate the exclusive placeholder
-        if (placeholderObstacle == null)
-        {
-            placeholderObstacle = CreatePlaceholderFromPrefab();
-        }
-        else
-        {
-            placeholderObstacle.gameObject.SetActive(false);
-        }
     }
 
     private void Start()
     {
-        // Pre-warm the pool so instances are ready before Round 1 starts
-        while (InActiveObstacles.Count < maxCapacity)
+        // If no placeholder was assigned in the Inspector, request one from GamePlayController's pool and make it invisible
+        if (placeholderObstacle == null && OnObstacleRequested != null)
         {
-            Obstacle newObs = CreateNewObstacleInstance();
-            InActiveObstacles.Add(newObs);
+            placeholderObstacle = OnObstacleRequested.Invoke();
+            placeholderObstacle.name = "Placeholder_Obstacle";
+            placeholderObstacle.transform.SetParent(contentParent, true);
+
+            if (placeholderObstacle.TryGetComponent(out SpriteRenderer sr)) sr.enabled = false;
+            if (placeholderObstacle.TryGetComponent(out Collider2D col)) col.enabled = false;
+        }
+
+        if (placeholderObstacle != null)
+        {
+            placeholderObstacle.gameObject.SetActive(false);
         }
     }
 
@@ -93,6 +84,7 @@ public class ConveyorBeltController : MonoBehaviour
 
     /// <summary>
     /// Called by GamePlayController when a round ends.
+    /// Stops the belt and sends all obstacles on it back to GamePlayController's pool.
     /// </summary>
     public void InactivateBelt()
     {
@@ -103,37 +95,13 @@ public class ConveyorBeltController : MonoBehaviour
             StopCoroutine(spawnCoroutine);
             spawnCoroutine = null;
         }
+
+        ResetBelt();
     }
 
     public void UpdateDifficulty(float progress)
     {
         currentDifficultyProgress = progress;
-    }
-
-    /// <summary>
-    /// Instantiates a new Obstacle from ObstacklePrefab and prepares it for the inactive pool.
-    /// </summary>
-    private Obstacle CreateNewObstacleInstance()
-    {
-        Obstacle instance = Instantiate(ObstacklePrefab, contentParent);
-        instance.gameObject.SetActive(false);
-        return instance;
-    }
-
-    /// <summary>
-    /// Instantiates a dedicated invisible placeholder from ObstacklePrefab.
-    /// </summary>
-    private Obstacle CreatePlaceholderFromPrefab()
-    {
-        Obstacle placeholder = Instantiate(ObstacklePrefab, contentParent);
-        placeholder.name = "Placeholder_Obstacle";
-
-        // Disable visuals and colliders so the player can't see or click the placeholder
-        if (placeholder.TryGetComponent(out SpriteRenderer sr)) sr.enabled = false;
-        if (placeholder.TryGetComponent(out Collider2D col)) col.enabled = false;
-
-        placeholder.gameObject.SetActive(false);
-        return placeholder;
     }
 
     private IEnumerator SpawnRoutine()
@@ -173,32 +141,32 @@ public class ConveyorBeltController : MonoBehaviour
 
     private void SpawnObstacle()
     {
-        Obstacle nextObstacle;
-
-        if (InActiveObstacles.Count <= 0)
+        if (OnObstacleRequested == null)
         {
-            // Pool ran out (e.g., player placed obstacles on lanes) -> Instantiate a new one!
-            nextObstacle = CreateNewObstacleInstance();
-        }
-        else
-        {
-            nextObstacle = InActiveObstacles[0];
-            InActiveObstacles.RemoveAt(0);
+            Debug.LogError("No listener for OnObstacleRequested! Make sure GamePlayController is subscribed.");
+            return;
         }
 
-        // 1. Calculate weighted ID using currentDifficultyProgress
-        int selectedId = GetWeightedObstacleId();
+        // 1. Request an inactive obstacle from GamePlayController via Func delegate
+        Obstacle nextObstacle = OnObstacleRequested.Invoke();
+        if (nextObstacle == null) return;
 
-        // 2. Fetch the ObstacleData from DataManager and initialize
+        nextObstacle.transform.SetParent(contentParent, true);
+
+        Vector3 spawnPos = spawnPoint.position;
+        spawnPos.z = 0f;
+        nextObstacle.transform.position = spawnPos;
+
+        // 2. Activate BEFORE Initialize so Obstacle.Awake() caches SpriteRenderer first
+        nextObstacle.gameObject.SetActive(true);
+
+        // 3. Calculate weighted ID and Initialize with ObstacleData
         if (DataManager.Instance != null)
         {
+            int selectedId = GetWeightedObstacleId();
             ObstacleData data = DataManager.Instance.GetObstacleDataById(selectedId);
             nextObstacle.Initialize(data);
         }
-
-        nextObstacle.transform.SetParent(contentParent, true);
-        nextObstacle.transform.position = spawnPoint.position;
-        nextObstacle.gameObject.SetActive(true);
 
         ActiveObstacles.Add(nextObstacle);
     }
@@ -231,7 +199,7 @@ public class ConveyorBeltController : MonoBehaviour
             totalWeight += weights[id];
         }
 
-        float roll = Random.Range(0f, totalWeight);
+        float roll = UnityEngine.Random.Range(0f, totalWeight);
         float cumulative = 0f;
 
         for (int id = 0; id <= maxUnlockedId; id++)
@@ -263,18 +231,14 @@ public class ConveyorBeltController : MonoBehaviour
                 : ActiveObstacles[i - 1].transform.position.x - itemSpacing;
 
             Vector3 pos = current.transform.position;
-
             pos.x = Mathf.MoveTowards(pos.x, limitX, beltSpeed * Time.deltaTime);
             pos.y = spawnPoint.position.y;
+            pos.z = 0f;
 
             current.transform.position = pos;
         }
     }
 
-    /// <summary>
-    /// Call this in Obstacle.OnBeginDrag
-    /// Obstacle is not placed on a lane or inventory yet. Player is just holding it.
-    /// </summary>
     public void RemoveObstacleFromBelt(Obstacle item)
     {
         if (currentlyDraggedObstacle != null && currentlyDraggedObstacle != item)
@@ -287,7 +251,6 @@ public class ConveyorBeltController : MonoBehaviour
 
         currentlyDraggedObstacle = item;
 
-        // Place the invisible placeholder in the exact position and list slot
         placeholderObstacle.transform.SetParent(contentParent, true);
         placeholderObstacle.transform.position = item.transform.position;
         placeholderObstacle.gameObject.SetActive(true);
@@ -296,9 +259,6 @@ public class ConveyorBeltController : MonoBehaviour
         Debug.Log("Obstacle is removed from the belt (space held by placeholder).");
     }
 
-    /// <summary>
-    /// Call this in Obstacle.OnEndDrag when placement is rejected.
-    /// </summary>
     public void ReturnObstacleToPlaceholder(Obstacle item)
     {
         if (currentlyDraggedObstacle != item)
@@ -320,7 +280,8 @@ public class ConveyorBeltController : MonoBehaviour
     }
 
     /// <summary>
-    /// Call this in Obstacle.OnEndDrag when placement is confirmed.
+    /// Called when the obstacle is placed onto a Lane or Inventory.
+    /// Removes it from the belt's 6-slot list (Boundary will return it to the pool later when hit).
     /// </summary>
     public void ConfirmObstaclePlacement(Obstacle item)
     {
@@ -336,35 +297,31 @@ public class ConveyorBeltController : MonoBehaviour
             ActiveObstacles.Remove(item);
         }
 
-        Debug.Log("Obstacle removed from belt. Gap in the conveyor belt will now close.");
+        Debug.Log("Obstacle placed on board. Belt slot freed!");
     }
 
     /// <summary>
-    /// Clears all active obstacles on the belt back into the inactive pool for a fresh round.
+    /// Sends all obstacles remaining on the belt (and any mid-drag obstacle) back to GamePlayController's pool.
     /// </summary>
     public void ResetBelt()
     {
+        if (placeholderObstacle != null)
+        {
+            placeholderObstacle.gameObject.SetActive(false);
+            ActiveObstacles.Remove(placeholderObstacle);
+        }
+
         if (currentlyDraggedObstacle != null)
         {
-            currentlyDraggedObstacle.gameObject.SetActive(false);
-            currentlyDraggedObstacle.transform.SetParent(contentParent, true);
-            if (!InActiveObstacles.Contains(currentlyDraggedObstacle))
-            {
-                InActiveObstacles.Add(currentlyDraggedObstacle);
-            }
+            ActiveObstacles.Add(currentlyDraggedObstacle);
             currentlyDraggedObstacle = null;
         }
 
-        placeholderObstacle.gameObject.SetActive(false);
-        ActiveObstacles.Remove(placeholderObstacle);
-
-        while (ActiveObstacles.Count > 0)
+        if (ActiveObstacles.Count > 0)
         {
-            Obstacle obs = ActiveObstacles[0];
-            ActiveObstacles.RemoveAt(0);
-            obs.gameObject.SetActive(false);
-            obs.transform.SetParent(contentParent, true);
-            InActiveObstacles.Add(obs);
+            // Send the whole list back to GamePlayController via static Action!
+            ConveyorBeltClean?.Invoke(new List<Obstacle>(ActiveObstacles));
+            ActiveObstacles.Clear();
         }
     }
 }
