@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 581db1c208f11a347af7d4050fa9ea5a, type: 3}
   m_Name: Obstacle_3x1
   m_EditorClassIdentifier: Assembly-CSharp::ObstacleData
-  obstacleId: 3
+  obstacleId: 4
   widthInCells: 1
   heightInLanes: 3
   conveyorSprite: {fileID: 7482667652216324306, guid: 710e49129f02f2949bb42a9d7d2ad911, type: 3}
-  obstacleSprite: {fileID: 7482667652216324306, guid: 710e49129f02f2949bb42a9d7d2ad911, type: 3}
+  obstacleSprite: {fileID: -5390775989371927854, guid: 94e8928a3fc9fae4c925a7baa8426fbe, type: 3}
   obstacleLevel: 0
