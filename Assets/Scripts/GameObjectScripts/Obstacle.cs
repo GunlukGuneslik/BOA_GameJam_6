@@ -18,6 +18,8 @@ public class Obstacle : MonoBehaviour,
     [SerializeField] private LayerMask inventoryLayerMask;
     [SerializeField] private float gridSize = 1f;
 
+    private bool isOnDrag = false;
+
     private void Awake()
     {
         mainCamera = Camera.main;
@@ -47,6 +49,7 @@ public class Obstacle : MonoBehaviour,
         if (previousParent == null)
         {
             Debug.Log("Obstacke cannot be without a parent!!");
+            return;
         }
         else if (previousParent.TryGetComponent(out ConveyorBeltController belt))
         {
@@ -61,13 +64,17 @@ public class Obstacle : MonoBehaviour,
         else
         {
             Debug.LogError("Wrong hierarchy!!!");
+            return;
         }
 
-        if (previousParent != null)
-        {
-            transform.SetParent(null, true);
-        }
-        
+        //if (previousParent != null)
+        //{
+
+        //}
+
+        isOnDrag = true;
+        transform.SetParent(null, true);
+
 
         // Drag sırasında obstacle kendi collider'ına takılmasın.
         obstacleCollider.enabled = false;
@@ -75,6 +82,10 @@ public class Obstacle : MonoBehaviour,
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!isOnDrag) {
+            return;
+        }
+
         transform.position = ScreenToWorld2D(eventData.position);
     }
 
@@ -102,6 +113,7 @@ public class Obstacle : MonoBehaviour,
             {
                 PlaceOnLane(lane);
                 obstacleCollider.enabled = true;
+                isOnDrag = false;
                 return;
             }
         }
@@ -120,6 +132,7 @@ public class Obstacle : MonoBehaviour,
 
         ReturnToPreviousPosition();
         obstacleCollider.enabled = true;
+        isOnDrag = false;
     }
 
     private Vector3 ScreenToWorld2D(Vector2 screenPosition)
@@ -161,6 +174,8 @@ public class Obstacle : MonoBehaviour,
             lane.transform.position.y,
             0f
         );
+
+        previousParent = lane.transform;
     }
 
     private void ReturnToPreviousPosition()
