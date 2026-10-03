@@ -74,8 +74,8 @@ public class Obstacle : MonoBehaviour,
         spriteRenderer.sprite = data.obstacleSprite;
 
         transform.localScale = new Vector3(
-            data.widthInCells * placementGrid.CellWidth,
-            data.heightInLanes * placementGrid.LaneSpacing,
+            data.widthInCells * placementGrid.CellSize,
+            data.heightInLanes * placementGrid.CellSize,
             1f
         );
 
@@ -119,11 +119,10 @@ public class Obstacle : MonoBehaviour,
 
         if (hitLane != null)
         {
-            Lane lane = hitLane.GetComponent<Lane>();
-
-            if (lane != null && TryPlaceObstacle(lane))
+            if (TryPlaceObstacle())
             {
-                PlaceOnLane(lane);
+                PlaceOnGrid();
+
                 obstacleCollider.enabled = true;
                 isOnDrag = false;
                 return;
@@ -163,12 +162,19 @@ public class Obstacle : MonoBehaviour,
         return worldPosition;
     }
 
-    private bool TryPlaceObstacle(Lane lane)
+    private bool TryPlaceObstacle()
     {
-        int startLane = lane.laneIndex;
+        int startLane =
+            placementGrid.WorldYToStartLane(
+                transform.position.y,
+                data.heightInLanes
+            );
 
         int startColumn =
-            placementGrid.WorldXToColumn(transform.position.x);
+            placementGrid.WorldXToStartColumn(
+                transform.position.x,
+                data.widthInCells
+            );
 
         return placementGrid.CanPlace(
             startLane,
@@ -178,27 +184,31 @@ public class Obstacle : MonoBehaviour,
         );
     }
 
-    private void PlaceOnLane(Lane lane)
+    private void PlaceOnGrid()
     {
-        int startLane = lane.laneIndex;
+        int startLane =
+            placementGrid.WorldYToStartLane(
+                transform.position.y,
+                data.heightInLanes
+            );
 
         int startColumn =
-            placementGrid.WorldXToColumn(transform.position.x);
+            placementGrid.WorldXToStartColumn(
+                transform.position.x,
+                data.widthInCells
+            );
 
-        float firstCellCenterX =
-            placementGrid.ColumnToWorldX(startColumn);
-
-        float snappedX =
-            firstCellCenterX +
-            ((data.widthInCells - 1) * placementGrid.CellWidth / 2f);
-
-        float snappedY =
-            lane.transform.position.y -
-            ((data.heightInLanes - 1) * placementGrid.LaneSpacing / 2f);
+        Vector2 snappedPosition =
+            placementGrid.GetPlacementCenter(
+                startLane,
+                startColumn,
+                data.widthInCells,
+                data.heightInLanes
+            );
 
         transform.position = new Vector3(
-            snappedX,
-            snappedY,
+            snappedPosition.x,
+            snappedPosition.y,
             0f
         );
 
@@ -217,5 +227,14 @@ public class Obstacle : MonoBehaviour,
 
         spriteRenderer.sprite = data.conveyorSprite;
         transform.localScale = Vector3.one;
+    }
+
+    private int GetStartLaneFromCenter(Lane centerLane)
+    {
+        int centerLaneIndex = centerLane.laneIndex;
+
+        int offset = (data.heightInLanes - 1) / 2;
+
+        return centerLaneIndex - offset;
     }
 }
