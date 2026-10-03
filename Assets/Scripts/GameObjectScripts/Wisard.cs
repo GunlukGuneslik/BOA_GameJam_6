@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+public class Wisard : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -10,16 +10,6 @@ public class UIManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        
-    }
-
-    private void OnAnimatorIK(int layerIndex)
-    {
-       
-    }
-
-    private void OnCollisionEnter(Collision collision)
     {
         
     }
