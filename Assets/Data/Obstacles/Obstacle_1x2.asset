@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 581db1c208f11a347af7d4050fa9ea5a, type: 3}
-  m_Name: Obstacle_2x1
+  m_Name: Obstacle_1x2
   m_EditorClassIdentifier: Assembly-CSharp::ObstacleData
-  obstacleId: 2
-  widthInCells: 1
-  heightInLanes: 2
+  obstacleId: 1
+  widthInCells: 2
+  heightInLanes: 1
   conveyorSprite: {fileID: 7482667652216324306, guid: 710e49129f02f2949bb42a9d7d2ad911, type: 3}
-  obstacleSprite: {fileID: 1431980212519641259, guid: 51126248f23872e408a1d375206e7eee, type: 3}
+  obstacleSprite: {fileID: -3699952760151649351, guid: 8697a25293ff98a4c94989ea9a3427cf, type: 3}
   obstacleLevel: 0

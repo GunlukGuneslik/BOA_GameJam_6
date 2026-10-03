@@ -7,13 +7,14 @@ public class Obstacle : MonoBehaviour,
     IEndDragHandler
 {
     private Camera mainCamera;
-    private Collider2D obstacleCollider;
+    private BoxCollider2D obstacleCollider;
     private PlacementGrid placementGrid;
     private Transform previousParent;
     private Vector3 previousPosition;
 
     [SerializeField] private ObstacleData data;
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Transform visualTransform;
     [SerializeField] private LayerMask laneLayerMask;
     [SerializeField] private LayerMask inventoryLayerMask;
 
@@ -22,7 +23,7 @@ public class Obstacle : MonoBehaviour,
     private void Awake()
     {
         mainCamera = Camera.main;
-        obstacleCollider = GetComponent<Collider2D>();
+        obstacleCollider = GetComponent<BoxCollider2D>();
         placementGrid = FindFirstObjectByType<PlacementGrid>();
     }
 
@@ -69,12 +70,11 @@ public class Obstacle : MonoBehaviour,
             return;
         }
 
-        spriteRenderer.sprite = data.obstacleSprite;
+        ApplyObstacleVisual();
 
-        transform.localScale = new Vector3(
+        obstacleCollider.size = new Vector2(
             data.widthInCells * placementGrid.CellSize,
-            data.heightInLanes * placementGrid.CellSize,
-            1f
+            data.heightInLanes * placementGrid.CellSize
         );
 
         //if (previousParent != null)
@@ -224,15 +224,38 @@ public class Obstacle : MonoBehaviour,
         transform.position = previousPosition;
 
         spriteRenderer.sprite = data.conveyorSprite;
-        transform.localScale = Vector3.one;
+        visualTransform.localScale = Vector3.one;
+
+        obstacleCollider.size = Vector2.one; // extra security
     }
 
-    private int GetStartLaneFromCenter(Lane centerLane)
+    private void ApplyObstacleVisual()
     {
-        int centerLaneIndex = centerLane.laneIndex;
+        if (data == null)
+        {
+            Debug.LogError("ObstacleData is null.");
+            return;
+        }
 
-        int offset = (data.heightInLanes - 1) / 2;
+        if (data.obstacleSprite == null)
+        {
+            Debug.LogError("Obstacle Sprite is null for obstacle data: " + data.name);
+            return;
+        }
+        spriteRenderer.sprite = data.obstacleSprite;
 
-        return centerLaneIndex - offset;
+        Vector2 spriteSize = spriteRenderer.sprite.bounds.size;
+
+        float targetWidth =
+            data.widthInCells * placementGrid.CellSize;
+
+        float targetHeight =
+            data.heightInLanes * placementGrid.CellSize;
+
+        visualTransform.localScale = new Vector3(
+            targetWidth / spriteSize.x,
+            targetHeight / spriteSize.y,
+            1f
+        );
     }
 }
