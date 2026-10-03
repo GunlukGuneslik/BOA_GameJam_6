@@ -2,15 +2,29 @@ using UnityEngine;
 
 public class InventoryController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] private Obstacle currentObstacle;
+
+    private void Awake()
+    {
+        currentObstacle = null;
+    }
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
     }
+
+    public void RemoveObstacleFromInventory() {
+        if (currentObstacle == null) {
+            Debug.LogError("Obstacle is not assigned to an inventory");
+            return;
+        }
+
+        currentObstacle = null;
+    } 
 }
