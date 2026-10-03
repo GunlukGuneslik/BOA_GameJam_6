@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class GamePlayController : MonoBehaviour
 {
-    [Header("Global Pool")]
+    [Header("Obstacle Global Pool")]
     [SerializeField] private Obstacle ObstacklePrefab;
-    [SerializeField] private Transform PoolContent;
-    [SerializeField] private int initialPoolCount = 15;
+    [SerializeField] private Transform ObstaclePoolContent;
+    [SerializeField] private int initialObstaclePoolCount = 15;
     private List<Obstacle> ObsteclePool; // All inactive obstacles live here
+
+    [Header("Wisard Global Pool")]
+    [SerializeField] private Wisard WisardPrefab;
+    [SerializeField] private Transform WisardPoolContent;
+    [SerializeField] private int initialWisardPoolCount = 15;
+    private List<Wisard> WisardPool; // All inactive obstacles live here
 
     [Header("Controllers")]
     [SerializeField] private ConveyorBeltController conveyorBeltController;
@@ -33,15 +39,16 @@ public class GamePlayController : MonoBehaviour
         currentSurvivalTime = 0f;
         isRoundActive = false;
 
-        if (PoolContent == null)
+// For Obstacle pool
+        if (ObstaclePoolContent == null)
         {
-            PoolContent = transform;
+            ObstaclePoolContent = transform;
         }
 
         ObsteclePool = new List<Obstacle>();
 
         // Gather any existing obstacles already placed under PoolContent
-        foreach (Transform child in PoolContent)
+        foreach (Transform child in ObstaclePoolContent)
         {
             if (child.TryGetComponent(out Obstacle obs))
             {
@@ -51,11 +58,38 @@ public class GamePlayController : MonoBehaviour
         }
 
         // Pre-warm the pool
-        while (ObsteclePool.Count < initialPoolCount)
+        while (ObsteclePool.Count < initialObstaclePoolCount)
         {
-            Obstacle newObstacle = Instantiate(ObstacklePrefab, PoolContent);
+            Obstacle newObstacle = Instantiate(ObstacklePrefab, ObstaclePoolContent);
             newObstacle.gameObject.SetActive(false);
             ObsteclePool.Add(newObstacle);
+        }
+
+// For Wisard pool
+
+        if (WisardPoolContent == null)
+        {
+            WisardPoolContent = transform;
+        }
+
+        WisardPool = new List<Wisard>();
+
+        // Gather any existing obstacles already placed under PoolContent
+        foreach (Transform child in WisardPoolContent)
+        {
+            if (child.TryGetComponent(out Wisard wisard))
+            {
+                wisard.gameObject.SetActive(false);
+                WisardPool.Add(wisard);
+            }
+        }
+
+        // Pre-warm the pool
+        while (WisardPool.Count < initialWisardPoolCount)
+        {
+            Wisard newWisard = Instantiate(WisardPrefab, WisardPoolContent);
+            newWisard.gameObject.SetActive(false);
+            WisardPool.Add(newWisard);
         }
     }
 
@@ -101,7 +135,7 @@ public class GamePlayController : MonoBehaviour
             return result;
         }
 
-        Obstacle newObstacle = Instantiate(ObstacklePrefab, PoolContent);
+        Obstacle newObstacle = Instantiate(ObstacklePrefab, ObstaclePoolContent);
         newObstacle.gameObject.SetActive(false);
         return newObstacle;
     }
@@ -114,7 +148,7 @@ public class GamePlayController : MonoBehaviour
         if (obs == null) return;
 
         obs.gameObject.SetActive(false);
-        obs.transform.SetParent(PoolContent, true);
+        obs.transform.SetParent(ObstaclePoolContent, true);
 
         if (!ObsteclePool.Contains(obs))
         {

@@ -216,6 +216,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestObstacle_2x2
       objectReference: {fileID: 0}
+    - target: {fileID: 2312779990234983799, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2546653004087374834, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.125
@@ -261,6 +265,59 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
+--- !u!1 &180850460
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 180850462}
+  - component: {fileID: 180850461}
+  m_Layer: 0
+  m_Name: DataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &180850461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180850460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1c76613dfa2d7e4d9e7cf768ee5fe03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DataManager
+  currentPlayerData: {fileID: 11400000, guid: 7ec2f469410f0eb409988f0c76741a91, type: 2}
+  obstacleDataArray:
+  - {fileID: 11400000, guid: eea7c99bfd1e84948ba4f95e1b0e0c35, type: 2}
+  - {fileID: 11400000, guid: 7e98dc8bfde354c49a08cdccd680b558, type: 2}
+  - {fileID: 11400000, guid: 428abd8a7d9d5ee4c94e7b3737a80c31, type: 2}
+  - {fileID: 11400000, guid: d0c7b85ed8c1e5c46b384a52f96ebaae, type: 2}
+  - {fileID: 11400000, guid: adc40668631569e409b0674d1b638620, type: 2}
+  lowTierBias: 2
+  lateGameBoost: 2.5
+--- !u!4 &180850462
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180850460}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.35226, y: -1.03205, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &281638958
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -280,6 +337,10 @@ PrefabInstance:
     - target: {fileID: 2312779990234983799, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
       propertyPath: m_Name
       value: TestObstacle_2x1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2312779990234983799, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2546653004087374834, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
       propertyPath: m_LocalPosition.x
@@ -395,6 +456,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestObstacle_1x2
       objectReference: {fileID: 0}
+    - target: {fileID: 2312779990234983799, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2546653004087374834, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.039
@@ -440,6 +505,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
+--- !u!1 &428488108
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 428488109}
+  m_Layer: 0
+  m_Name: PoolContent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &428488109
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 428488108}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1967701458}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &445109256 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2546653004087374834, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
@@ -604,6 +700,52 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_MaxRayIntersections: 0
+--- !u!1 &529804831
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 529804833}
+  - component: {fileID: 529804832}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &529804832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 529804831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64383e9b08c6d1b4aaa8ddc1fda9ccf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  gamePlayController: {fileID: 1967701457}
+  roundNum: 0
+--- !u!4 &529804833
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 529804831}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.35226, y: -1.03205, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &560444412
 GameObject:
   m_ObjectHideFlags: 0
@@ -705,6 +847,94 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &581708788
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 581708790}
+  - component: {fileID: 581708789}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &581708789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581708788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c73a2f0b6c9b3a449831f9b6c58eb42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+--- !u!4 &581708790
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581708788}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.35226, y: -1.03205, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &598137861
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 598137863}
+  - component: {fileID: 598137862}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &598137862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598137861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c8756323c3b403439309e2a027a765c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIManager
+--- !u!4 &598137863
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598137861}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.35226, y: -1.03205, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -808,6 +1038,10 @@ PrefabInstance:
     - target: {fileID: 2312779990234983799, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
       propertyPath: m_Name
       value: TestObstacle_3x1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2312779990234983799, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2546653004087374834, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1133,6 +1367,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 13d5d1694e843de40ab315219bef0744, type: 3}
+--- !u!1 &1349726993
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1349726994}
+  m_Layer: 0
+  m_Name: EndPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1349726994
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1349726993}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 8.2, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1377861022}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1377861020
 GameObject:
   m_ObjectHideFlags: 0
@@ -1229,6 +1494,8 @@ Transform:
   - {fileID: 1900238091}
   - {fileID: 445109256}
   - {fileID: 1519607668}
+  - {fileID: 1954269784}
+  - {fileID: 1349726994}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1377861023
@@ -1243,12 +1510,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbbaf239e057587408c0935ba26be9d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConveyorBeltController
+  placeholderObstacle: {fileID: 0}
   beltSpeed: 3
   itemSpacing: 1.2
   maxCapacity: 6
   spawnInterval: 2
-  spawnPoint: {fileID: 0}
-  endPoint: {fileID: 0}
+  spawnPoint: {fileID: 1954269784}
+  endPoint: {fileID: 1349726994}
+  lowTierBias: 2
+  lateGameBoost: 2.5
 --- !u!1 &1519607667
 GameObject:
   m_ObjectHideFlags: 0
@@ -1528,6 +1798,88 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2546653004087374834, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
   m_PrefabInstance: {fileID: 907014050}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1954269783
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1954269784}
+  m_Layer: 0
+  m_Name: SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1954269784
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954269783}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9.53, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1377861022}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1967701456
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1967701458}
+  - component: {fileID: 1967701457}
+  m_Layer: 0
+  m_Name: GamePlayController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1967701457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967701456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73e3306f314bfe24283bb49a67a5716f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GamePlayController
+  ObstacklePrefab: {fileID: 1326047639595442256, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
+  PoolContent: {fileID: 428488109}
+  initialPoolCount: 15
+  conveyorBeltController: {fileID: 1377861023}
+  timeToMaxDifficulty: 90
+  currentSurvivalTime: 0
+--- !u!4 &1967701458
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967701456}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.35226, y: -1.03205, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 428488109}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2857711530028964211
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1547,6 +1899,10 @@ PrefabInstance:
     - target: {fileID: 2312779990234983799, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
       propertyPath: m_Name
       value: TestObstacle_1x1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2312779990234983799, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2546653004087374834, guid: 940bae1bb275d5a498a9ec2ab3ae1360, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1609,3 +1965,8 @@ SceneRoots:
   - {fileID: 60195212}
   - {fileID: 1377861022}
   - {fileID: 947441498}
+  - {fileID: 180850462}
+  - {fileID: 529804833}
+  - {fileID: 1967701458}
+  - {fileID: 598137863}
+  - {fileID: 581708790}

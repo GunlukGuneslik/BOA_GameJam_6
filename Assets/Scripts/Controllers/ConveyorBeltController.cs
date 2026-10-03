@@ -9,7 +9,6 @@ public class ConveyorBeltController : MonoBehaviour
     private List<Obstacle> ActiveObstacles;
 
     [Header("References")]
-    [SerializeField] private Transform contentParent;
     [SerializeField] private Obstacle placeholderObstacle;
 
     [Header("Belt Movement & Capacity")]
@@ -40,23 +39,25 @@ public class ConveyorBeltController : MonoBehaviour
     {
         isBeltActive = false;
         ActiveObstacles = new List<Obstacle>();
-
-        if (contentParent == null)
-        {
-            contentParent = transform;
-        }
     }
 
     private void Start()
     {
-        // If no placeholder was assigned in the Inspector, request one from GamePlayController's pool and make it invisible
+        EnsurePlaceholderExists();
+    }
+
+    private void EnsurePlaceholderExists()
+    {
         if (placeholderObstacle == null && OnObstacleRequested != null)
         {
             placeholderObstacle = OnObstacleRequested.Invoke();
             placeholderObstacle.name = "Placeholder_Obstacle";
-            placeholderObstacle.transform.SetParent(contentParent, true);
+            placeholderObstacle.transform.SetParent(transform, true);
 
-            if (placeholderObstacle.TryGetComponent(out SpriteRenderer sr)) sr.enabled = false;
+            // Use GetComponentInChildren in case SpriteRenderer is on the child visualTransform
+            SpriteRenderer sr = placeholderObstacle.GetComponentInChildren<SpriteRenderer>();
+            if (sr != null) sr.enabled = false;
+
             if (placeholderObstacle.TryGetComponent(out Collider2D col)) col.enabled = false;
         }
 
@@ -71,6 +72,7 @@ public class ConveyorBeltController : MonoBehaviour
     /// </summary>
     public void ActivateBelt()
     {
+        EnsurePlaceholderExists();
         ResetBelt();
         currentDifficultyProgress = 0f;
         isBeltActive = true;
@@ -151,13 +153,14 @@ public class ConveyorBeltController : MonoBehaviour
         Obstacle nextObstacle = OnObstacleRequested.Invoke();
         if (nextObstacle == null) return;
 
-        nextObstacle.transform.SetParent(contentParent, true);
+        // Parent directly to the ConveyorBelt transform
+        nextObstacle.transform.SetParent(transform, true);
 
         Vector3 spawnPos = spawnPoint.position;
         spawnPos.z = 0f;
         nextObstacle.transform.position = spawnPos;
 
-        // 2. Activate BEFORE Initialize so Obstacle.Awake() caches SpriteRenderer first
+        // 2. Activate BEFORE Initialize so Obstacle.Awake() caches components first
         nextObstacle.gameObject.SetActive(true);
 
         // 3. Calculate weighted ID and Initialize with ObstacleData
@@ -251,7 +254,7 @@ public class ConveyorBeltController : MonoBehaviour
 
         currentlyDraggedObstacle = item;
 
-        placeholderObstacle.transform.SetParent(contentParent, true);
+        placeholderObstacle.transform.SetParent(transform, true);
         placeholderObstacle.transform.position = item.transform.position;
         placeholderObstacle.gameObject.SetActive(true);
 
@@ -270,7 +273,7 @@ public class ConveyorBeltController : MonoBehaviour
         int index = ActiveObstacles.IndexOf(placeholderObstacle);
         if (index >= 0)
         {
-            item.transform.SetParent(contentParent, true);
+            item.transform.SetParent(transform, true);
             item.transform.position = placeholderObstacle.transform.position;
             ActiveObstacles[index] = item;
         }
@@ -281,7 +284,7 @@ public class ConveyorBeltController : MonoBehaviour
 
     /// <summary>
     /// Called when the obstacle is placed onto a Lane or Inventory.
-    /// Removes it from the belt's 6-slot list (Boundary will return it to the pool later when hit).
+    /// Removes it from the belt's 6-slot list (Border will return it to the pool later when hit).
     /// </summary>
     public void ConfirmObstaclePlacement(Obstacle item)
     {
