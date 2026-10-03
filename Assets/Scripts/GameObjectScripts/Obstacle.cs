@@ -8,15 +8,15 @@ public class Obstacle : MonoBehaviour,
 {
     private Camera mainCamera;
     private Collider2D obstacleCollider;
+    private SpriteRenderer spriteRenderer;
+    [SerializeField] private ObstacleData data;
+    private PlacementGrid placementGrid;
 
-    public Transform previousParent;
+    private Transform previousParent;
     private Vector3 previousPosition;
-
-    private ObstacleData data;
 
     [SerializeField] private LayerMask laneLayerMask;
     [SerializeField] private LayerMask inventoryLayerMask;
-    [SerializeField] private float gridSize = 1f;
 
     private bool isOnDrag = false;
 
@@ -24,19 +24,23 @@ public class Obstacle : MonoBehaviour,
     {
         mainCamera = Camera.main;
         obstacleCollider = GetComponent<Collider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        placementGrid = FindFirstObjectByType<PlacementGrid>();
+    }
+
+    private void Start()
+    {
+        if (data != null)
+        {
+            Initialize(data);
+        }
     }
 
     public void Initialize(ObstacleData data)
     {
         this.data = data;
-    }
-
-    /// <summary>
-    /// to update Obstacle data
-    /// </summary>
-    public void Initialize()
-    {
-        this.data = new ObstacleData();
+        spriteRenderer.sprite = data.conveyorSprite;
+        transform.localScale = Vector3.one;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -66,6 +70,14 @@ public class Obstacle : MonoBehaviour,
             Debug.LogError("Wrong hierarchy!!!");
             return;
         }
+
+        spriteRenderer.sprite = data.obstacleSprite;
+
+        transform.localScale = new Vector3(
+            data.widthInCells * placementGrid.CellWidth,
+            data.heightInLanes * placementGrid.LaneSpacing,
+            1f
+        );
 
         //if (previousParent != null)
         //{
@@ -122,11 +134,11 @@ public class Obstacle : MonoBehaviour,
             Physics2D.OverlapPoint(dropPosition, inventoryLayerMask);
 
         if (hitInventory != null)
-        {
-            // Inventory sistemi hazır olduğunda burası doldurulacak.
+{
             Debug.Log("Obstacle was placed on an inventory.");
 
             obstacleCollider.enabled = true;
+            isOnDrag = false;
             return;
         }
 
@@ -153,34 +165,57 @@ public class Obstacle : MonoBehaviour,
 
     private bool TryPlaceObstacle(Lane lane)
     {
-        // İleride:
-        // - obstacle başka obstacle ile overlap ediyor mu?
-        // - multi-lane obstacle sahaya sığıyor mu?
-        // - yasak placement bölgesinde mi?
-        // - gerekli grid cell'ler boş mu?
-        //
-        // kontrolleri burada yapılacak.
+        int startLane = lane.laneIndex;
 
-        return true;
+        int startColumn =
+            placementGrid.WorldXToColumn(transform.position.x);
+
+        return placementGrid.CanPlace(
+            startLane,
+            startColumn,
+            data.widthInCells,
+            data.heightInLanes
+        );
     }
 
     private void PlaceOnLane(Lane lane)
     {
+        int startLane = lane.laneIndex;
+
+        int startColumn =
+            placementGrid.WorldXToColumn(transform.position.x);
+
+        float firstCellCenterX =
+            placementGrid.ColumnToWorldX(startColumn);
+
         float snappedX =
-            Mathf.Round(transform.position.x / gridSize) * gridSize;
+            firstCellCenterX +
+            ((data.widthInCells - 1) * placementGrid.CellWidth / 2f);
+
+        float snappedY =
+            lane.transform.position.y -
+            ((data.heightInLanes - 1) * placementGrid.LaneSpacing / 2f);
 
         transform.position = new Vector3(
             snappedX,
-            lane.transform.position.y,
+            snappedY,
             0f
         );
 
-        previousParent = lane.transform;
+        placementGrid.OccupyCells(
+            startLane,
+            startColumn,
+            data.widthInCells,
+            data.heightInLanes
+        );
     }
 
     private void ReturnToPreviousPosition()
     {
         transform.SetParent(previousParent, true);
         transform.position = previousPosition;
+
+        spriteRenderer.sprite = data.conveyorSprite;
+        transform.localScale = Vector3.one;
     }
 }

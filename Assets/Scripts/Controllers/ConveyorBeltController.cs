@@ -37,7 +37,6 @@ public class ConveyorBeltController : MonoBehaviour
     public void RemoveObstacleFromBelt(Obstacle item)
     {
         ActiveObstacles.Remove(item);
-        item.Initialize();
         InActiveObstacles.Add(item);
 
         Debug.Log("Obstacle is removed from the belt.");
