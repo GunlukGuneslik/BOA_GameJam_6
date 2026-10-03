@@ -8,13 +8,12 @@ public class Obstacle : MonoBehaviour,
 {
     private Camera mainCamera;
     private Collider2D obstacleCollider;
-    private SpriteRenderer spriteRenderer;
-    [SerializeField] private ObstacleData data;
     private PlacementGrid placementGrid;
-
     private Transform previousParent;
     private Vector3 previousPosition;
 
+    [SerializeField] private ObstacleData data;
+    [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private LayerMask laneLayerMask;
     [SerializeField] private LayerMask inventoryLayerMask;
 
@@ -24,7 +23,6 @@ public class Obstacle : MonoBehaviour,
     {
         mainCamera = Camera.main;
         obstacleCollider = GetComponent<Collider2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
         placementGrid = FindFirstObjectByType<PlacementGrid>();
     }
 
